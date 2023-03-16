@@ -5,4 +5,4 @@ This repository contains various subdirectories consisting of standalone analysi
 ## Subdirectories
 
 1. **pyANNIEEventDisplay**
-     - Python Event Display for the visualizing events within the ANNIE detector. Currently a standalone from ToolAnalysis. 
+     - Python Event Display for visualizing events within the ANNIE detector. Currently implemented for MC low-energy events (no MRD/FMV).
