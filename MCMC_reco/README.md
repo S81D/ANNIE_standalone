@@ -1,6 +1,6 @@
 # MCMC_reco
 
-A low energy reconstruction algorithm for WCSim-generated MC events. Currently, no low energy reconstruction algorithm has been devloped for ANNIE; a working, reliable low energy reconstruction algorithm is needed for localizing neutral current events within the fiducial volume. Also can be applied to reconstructing the positions of deexcitation gammas from neutron-Gd capture.
+A low energy reconstruction algorithm for WCSim-generated MC events. Currently, no low energy reconstruction algorithm has been developed for ANNIE; a working, reliable low energy reconstruction algorithm is needed for localizing neutral current events within the fiducial volume. Also can be applied to reconstructing the positions of deexcitation gammas from neutron-Gd capture.
 
 Will eventually be integrated into the ToolAnalysis framework.
 
