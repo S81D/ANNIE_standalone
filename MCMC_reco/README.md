@@ -33,5 +33,5 @@ Notes:
 - `FullTankPMTGeometry.csv` contains the geometry, locations, type, and overall information of the PMTs and is important for loading in the detector geometry and establishing the priors (initial constraints on where the vertices could be).
 * `\emcee_files` is where the final reconstructed vertex positions and errors will be placed. It contains some example .dat files produced from the main reconstruction algorithm.
 * '\emcee_plots' is the directory where (if specified) the emcee corner plots will be produced. These show the walker distributions in each dimension, along with the associated truth (MC) vertex information.
-+ PDF.dat is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF (approximately non-central student's t).
-+ '\WCSim Data' contains the MC hit root trees from ToolAnalysis, and is where the .dat generated files (from the root trees) will be produced, and called from in the main algorithm.
+* PDF.dat is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF (approximately non-central student's t).
+* '\WCSim Data' contains the MC hit root trees from ToolAnalysis, and is where the .dat generated files (from the root trees) will be produced, and called from in the main algorithm.
