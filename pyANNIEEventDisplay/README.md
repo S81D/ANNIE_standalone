@@ -4,7 +4,7 @@ This Event Display shows the ANNIE detector's response to neutrino interactions 
 
 Will eventually be integrated into ToolAnalysis framework.
 
-This downstream python event display takes information extracted from .ROOT files produced using Tools in ToolAnalysis and shows (in 3D and in 2D) the timing and charge response of the PMTs. Currently designed for MC events (via WCSim), but will be expanded to show real events.
+This downstream python event display takes information extracted from .ROOT files produced using Tools in ToolAnalysis and shows the timing and charge response of the PMTs. Currently designed for MC events (via WCSim), but will be expanded to show real events.
 
 ## How to use (for MC)
 
@@ -18,10 +18,11 @@ root -l scriptname.C
 ```
 You will have produced corresponding `.dat` files for each script in the `/Extracted_Data` folder.
 
-4. Run the jupyter notebook `ANNIE Tank Event Display.ipynb`. Follow the commented instructions to display events within the ANNIE tank in 3D and in 2D. Event Display plots can also be saved in the associated directories.
+4. Run the event display script `python3 pyANNIEEventDisplay.py`. Edit the script as needed. Event Display plots are saved in `2D_Plots`.
 
 ##
 Notes: 
 - `FullTankPMTGeometry.csv` contains the geometry, locations, type, and overall information of the PMTs and is important for the jupyter notebook.
 * `\Extracted_Data` contains some example .dat files produced from the .C scripts.
-+ The `2D_Plots` and `3D_Plots` directories contain examples of the event display images.
++ The `2D_Plots` directory contains examples of the event display images.
++ There exists a .ipynb script (original) that will display plots in 3D corresponding to the Tank's geometry. This is not included.
