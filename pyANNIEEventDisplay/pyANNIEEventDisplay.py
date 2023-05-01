@@ -20,7 +20,7 @@
 #  Event Display of the PMT response to WCSim simulated, clustered Events  #
 # ------------------------------------------------------------------------ #
 #                         Author: Steven Doran                             #
-#                  Last Date of Modification: 3/15/23                      #
+#                   Last Date of Modification: 5/1/23                      #
 ############################################################################
 
 import numpy as np
