@@ -26,3 +26,4 @@ Notes:
 * `\Extracted_Data` contains some example .dat files produced from the .C scripts.
 + The `2D_Plots` directory contains examples of the event display images.
 + There exists a .ipynb script (original) that will display plots in 3D corresponding to the Tank's geometry. This is not included.
++ Unless you want hundreds of photos, do not run this script for all events. Produce a few at a time.
