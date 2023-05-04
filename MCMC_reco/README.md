@@ -76,3 +76,4 @@ Files and Directories included:
 * `\emcee_plots` is the directory where (if specified) the emcee corner plots will be produced. These show the walker distributions in each dimension, along with the associated truth (MC) vertex information.
 * `PDF.dat` is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF (approximately non-central student's t).
 * `\WCSim Data` contains the MC hit root trees from ToolAnalysis, and is where the .dat generated files (from the root trees) will be produced, and called from in the main algorithm.
+* `reco_dependencies.sh` is a bash script containing commands for downloading the required python dependencies. Comment out the dependencies you already have. Have not tested this.
