@@ -16,19 +16,33 @@ $$
 t_{res,i}(v) \equiv t_i - \frac{|\bf{v} - \bf{h_i}|}{c^{'}}
 $$
 
-where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water.
+where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 5-30 MeV), and it has a simple form that is easy to work with:
 
-Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0.
+If $Y$ is a standard normal r.v. and $V$ is an independent chi-square random variable with $k$ degrees of freedom, then:
 
-We can then construct a PDF of the hit-timing residual using many events. The will be the PDF in which we sample from to attempt to maximize our "observed" hit times.
+$$
+X = \frac{Y + c}{\sqrt{V/k}}
+$$
 
+where $c$ is the noncentrality parameter. In scipy, the parameters returned for scipy.stats.nct are (df, nc, loc, scale).
 
-The reconstruction algorithm works to maximize the likelihood of a hypothesis vertex. The likelihood is calculated 
+Having fit the PDF above, we can use our favorite maximium likelihood function to find the associated likelihood of a given test vertex. Currently, the MCMC algorithm uses Super-K's BONSAI likelihood function:
 
+$$
+\ln{L}(x,t_0) = \ln{\prod_{i=1}^{N} P(\Delta t_i (x))} = \sum_{i=1}^{N} \ln{P(t_i - tof_i (x) - t_0)}
+$$
 
+where the hit time residual $\Delta t_i (x)$ is again given by:
 
-hit-time residual for a given event - this involves finding the reconstructed vertex (x,y,z,ct) with the highest likelihood, according to some "truth" timing residual information. For this, we rely on the timing residuals WRT the MC truth vertex
+$$
+\Delta t_i (x) = t_i - tof_i (x) - t_0
+$$
 
+where $x$ is the test vertex, $t_i$ is the hit time at the $i$-th PMT, $t_0$ is the emission time (not 0 in this case, since it is an unknown) and $tof_i = |x_i - x|/c_{water}$ is the time of flight from the reconstructed vertex to the PMT vertex for hit i. In the future, a more appropriate likelihood function can be used for ANNIE.
+
+The overall strategy for finding the most likely vertex, given the data, is then to sample guess verticies. This is done by calculating $\Delta t_i (x)$ for each PMT hit time to get a collection of time residuals for a given guess vertex. Then, sample the PDF for each hit time residual to get the associated probability. Use all the hit time probabilities to calculate the log(likelihood) for a test vertex. Ideally, the reconstructed vertex that is closest to the truth vertex will yield the highest likelihood.
+
+A host of different numerical strategies can be employed to search for the most likely vertex. The numerical method used for this reconstruction algorithm relies on an affine-invariant markov chain monte carlo method. Emcee (https://emcee.readthedocs.io/en/stable/) is a pure-python implementation of the Affine-Invariant Ensemble Sampler (AIES) proposed by Goodman and Weare 2010. AIES utilizies an ensemble of walkers. The beauty of AIES is that its essentially a smart, randomized advanced grid search where the walkers talk to one another to sample the probability space. The walkers move via "stretch moves", where the proposal distribution $P(y|x)$ is based on the current positions of the other walkers. To update a given walker $X_k$, the method selects (at random) another walker $X_j$
 
 
 ## How to use (for MC)
