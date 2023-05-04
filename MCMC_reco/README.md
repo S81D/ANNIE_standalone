@@ -16,7 +16,7 @@ $$
 t_{res,i}(v) \equiv t_i - \frac{|\bf{v} - \bf{h_i}|}{c^{'}}
 $$
 
-where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 5-30 MeV), and it has a simple form that is easy to work with:
+where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize over our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 5-30 MeV), and it has a simple form that is easy to work with:
 
 If $Y$ is a standard normal r.v. and $V$ is an independent chi-square random variable with $k$ degrees of freedom, then:
 
