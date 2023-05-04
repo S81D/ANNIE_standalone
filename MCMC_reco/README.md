@@ -10,7 +10,24 @@ Hit filtering is done prior to ensure the hits fed into MCMC are reflective of a
 
 ## Likelihood maximization with MCMC
 
-Using the hit timing of the PMTs, the timing residual can be calculated:
+For a given neutrino event in the ANNIE tank, there will be a corresponding set of PMT hits. The hit times of the PMTs fold in the effects of the interaction topology, but also include PMT timing features, photocoverage, and scattering + reflection in the detector medium. As a result, a hit timing residual PDF can be constructed that details your detector's response to a given neutrino event. For this reconstruction algorithm, MC "truth" vertex information is used to calculate the hit timing residual for each hit in a given event:
+
+$$
+t_{res,i}(v) \equiv t_i - \frac{|\bf{v} - \bf{h_i}|}{c^{'}}
+$$
+
+where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water.
+
+Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0.
+
+We can then construct a PDF of the hit-timing residual using many events. The will be the PDF in which we sample from to attempt to maximize our "observed" hit times.
+
+
+The reconstruction algorithm works to maximize the likelihood of a hypothesis vertex. The likelihood is calculated 
+
+
+
+hit-time residual for a given event - this involves finding the reconstructed vertex (x,y,z,ct) with the highest likelihood, according to some "truth" timing residual information. For this, we rely on the timing residuals WRT the MC truth vertex
 
 
 
