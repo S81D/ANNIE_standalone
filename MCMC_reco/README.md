@@ -1,6 +1,6 @@
 # MCMC_reco
 
-A low energy reconstruction algorithm for WCSim-generated MC events. Currently, no low energy reconstruction algorithm has been developed for ANNIE; a working, reliable low energy reconstruction algorithm is needed for localizing neutral current events within the fiducial volume. Also can be applied to reconstructing the positions of deexcitation gammas from neutron-Gd capture.
+A low energy reconstruction algorithm for WCSim-generated MC events. Currently, no low energy reconstruction algorithm has been specifically developed for ANNIE; a working, reliable low energy reconstruction algorithm is needed for localizing neutral current events within the fiducial volume. It also can be applied to reconstructing the positions of deexcitation gammas from neutron-Gd capture.
 
 Will eventually be integrated into the ToolAnalysis framework.
 
@@ -9,6 +9,8 @@ The main algorithm takes information extracted from .ROOT files produced using T
 Hit filtering is done prior to ensure the hits fed into MCMC are reflective of a single interaction vertex. Only hit timing is utilized. Eventually a charge-based likelihood can be folded in, which is more relevant for higher energy events (> 30 MeV).
 
 ## Likelihood maximization with MCMC
+
+Using the hit timing of the PMTs, the timing residual can be calculated:
 
 
 
