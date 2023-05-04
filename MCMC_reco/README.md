@@ -46,11 +46,13 @@ A host of different numerical strategies can be employed to search for the most 
 
 To update a given walker $X_k$, the method selects (at random) another walker $X_j$. A proposal point is generated along the straight line (in the parameter space) connecting the two walkers. Moving the main walker to the proposed, new position depends upon some acceptance probability, which is based on the ratio of the target probability densities at the current and proposal points. If the proposal point is more likely, the main walker moves. This is done in sequence, with many walkers simulataneously; thus, if one walker samples a region in probability space that has a high likelihood, it will pull the other walkers towards it. The path followed by the ensemble is markov, so the results stay unbiased. This numerical approach also avoids getting trapped in local minimas by effecivtely sampling more of the parameter space. 
 
+## Hit Filtering
 
-
+to be updated
 
 ## How to use (for MC)
 
+(Pre-steps, in ToolAnalysis and using .C scripts to extract the relevant hits information)
 1. Run the BeamClusterMC ToolChain withinin ToolAnalysis to extract information from the WCSim output .ROOT file. The clusterization tools will filter hits within an alloted time interval (defined as a cluster) and pass these hits along as an event to the PhaseIITreeMaker tool. This tool will create a .ROOT file containing trees (cluster-level and raw hits) and histograms of various parameters of the events.
 2. Store the .ROOT output file from ToolAnalysis into the `/MC_Data` folder.
 3. Using the .C scripts located in the main directory (`charge_parameters.C`, `cluster_hits.C`, `true_MC.C`), extract hits and cluster information from each event into .dat files to be read by the jupyter notebook event display.
@@ -63,7 +65,9 @@ You will have produced corresponding `.dat` files for each script in the `/Extra
 
 This will be folded into a single bash script in the future.
 
-4. 
+(Running the code)
+1. Modify `emcee_lowE_reco.py` for the correct path names and other configuration information. This parametrization is at the top of the script.
+2. Run the code `python3 emcee_lowE_reco.py`. It will perform hit filtering and reconstruct the verticies. You will eventually be left with the corresponding .dat files and (if specified) emcee plots depicting the walker distributions, in comparison with the truth vertex info.
 
 ##
 Files and Directories included:
