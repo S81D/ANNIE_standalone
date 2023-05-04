@@ -46,6 +46,8 @@ A host of different numerical strategies can be employed to search for the most 
 
 To update a given walker $X_k$, the method selects (at random) another walker $X_j$. A proposal point is generated along the straight line (in the parameter space) connecting the two walkers. Moving the main walker to the proposed, new position depends upon some acceptance probability, which is based on the ratio of the target probability densities at the current and proposal points. If the proposal point is more likely, the main walker moves. This is done in sequence, with many walkers simulataneously; thus, if one walker samples a region in probability space that has a high likelihood, it will pull the other walkers towards it. The path followed by the ensemble is markov, so the results stay unbiased. This numerical approach also avoids getting trapped in local minimas by using multiple samplers, all of which sample more of the parameter space at random. In addition, a prior is used to exclude some of the parameter space (for this, a simple "don't explore more than x meters away from the detector tank" is employed).
 
+For a given event in the tank, this method then returns distributions of all the walkers in the 4D parameter space. The most common walker position is taken to be the reconstructed vertex.
+
 ## Hit Filtering
 
 to be updated
