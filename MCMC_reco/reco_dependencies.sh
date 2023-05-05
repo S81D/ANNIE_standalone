@@ -14,3 +14,4 @@ pip install scipy
 # emcee reco
 pip install corner
 pip install emcee
+pip install tqdm
