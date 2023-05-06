@@ -42,18 +42,20 @@ DisplayGeometry = False
 
 # 3. ---------------
 # Number of events we are performing the reconstruction on
-# Specify the starting and end event numbers (or just enable run_all = true to run all N_events)
 # *** (It is recommended to run this code in chunks (maybe 100 events at a time)) ***
 
-run_all = False       # will run all events
-start_event = 0       # if run_all == True, these won't matter
-final_event = 500     # can pass this as: N_events (total number of events; if running like 100:N_events)
+run_all = False               # will run all events
+
+# pass the starting and ending event number as arguments to the script
+start_event = sys.argv[1]     # if run_all == True, these won't matter
+final_event = sys.argv[2]     # can pass this as: N_events (total number of events; if running like 100:N_events)
 
 # 4. ---------------
 # emcee parameters
 nwalkers = 1000         # number of walkers
 burn_in_steps = 50      # number of burn-in steps to "feel out" the probability space
 n_steps = 100           # number of steps for walkers in the primary run
+prg_bar = False         # enable/disable progress bar. For grid submission, set = False
 
 save_picture = True     # specify whether you want to save the .png corner plots
 save_first_ten = False  # often useful for diagnostics, see if the reco algorithm is working before doing more events
@@ -574,12 +576,12 @@ try:
         # Perform burn-in steps in the MCMC chain to let the walkers explore the parameter space a bit
         # and get settled into the maximum of the density.
 
-        state = sampler.run_mcmc(p0, burn_in_steps, progress = True)   # save final position of the walkers (after N steps)
+        state = sampler.run_mcmc(p0, burn_in_steps, progress = prg_bar)   # save final position of the walkers (after N steps)
         sampler.reset()   # call to this method clears all of the important bookkeeping parameters
                           # in the sampler so we get a fresh start.
 
         # Now, we can do our production run of N steps
-        sampler.run_mcmc(state, n_steps, progress = True)
+        sampler.run_mcmc(state, n_steps, progress = prg_bar)
 
         # Mean acceptance fraction of the run
         file1.write("Event " + str(event) + 
