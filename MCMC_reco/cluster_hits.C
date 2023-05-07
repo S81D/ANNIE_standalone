@@ -16,7 +16,7 @@ using namespace std;
 void cluster_hits(){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
 	TTree *tr=(TTree*)f->Get("phaseIITankClusterTree"); // creates the TTree object
   	
 	// event-level information
@@ -45,7 +45,7 @@ void cluster_hits(){
 	Long64_t n = tr->GetEntries();
 
 	ofstream myfile_hits;
-	myfile_hits.open ("WCSim Data/30MeV/cluster_hits_electron_swarm_30MeV.dat");
+	myfile_hits.open ("WCSim_Data/30MeV/cluster_hits_electron_swarm_30MeV.dat");
 	myfile_hits << "EventNumber Channel hitT hitX hitY hitZ hitQ hitPE\n";
 
 	for (Long64_t i=0;i<n;i++){
