@@ -17,7 +17,7 @@ using namespace std;
 void charge_parameters(){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
 	TTree *tr=(TTree*)f->Get("phaseIITankClusterTree"); // creates the TTree object
   
 
@@ -45,7 +45,7 @@ void charge_parameters(){
 
 	// create and open the file where the contents will be dumped
 	ofstream myfile;
-	myfile.open ("WCSim Data/30MeV/charge_event_electron_swarm_30MeV.dat");
+	myfile.open ("WCSim_Data/30MeV/charge_event_electron_swarm_30MeV.dat");
 	
 	// first line are the column headers (modify if needed)
 	myfile << "eventNumber clusterCharge " 
