@@ -19,8 +19,9 @@ import matplotlib.pyplot as plt
 
 # # # # # # # # # # # # # # # 
 # Parameterization -- load in the .dat files exported from TA root files
-position = 'swarm_30MeV'
-folder = 'WCSim Data/30MeV/'
+en_str = '30MeV                 # specifies the title, output file header, and path for input files
+position = 'swarm_' + en_str
+folder = 'WCSim Data/' + en_str + '/'
 
 # # # # # # # # # # # # # # #
 # Event-level information
@@ -249,17 +250,17 @@ param_str = ', '.join(['{}={:0.2f}'.format(k,v) for k,v in zip(param_names, best
 dist_str = '{}({})'.format(best_dist[0].name, param_str)
 print('Best-fit distribution and parameters: ',dist_str)
 
-ax.set_title('Timing Residual PDF best fit distribution \n' + dist_str)
+ax.set_title('Timing Residual PDF best fit distribution ' + en_str + '\n' + dist_str)
 ax.set_xlabel('hit time residual [s]')
 
-path = 'hit time residual PDF (nct) fit 15 MeV.png'
+path = 'hit time residual PDF (nct) fit ' + en_str + '.png'
 #plt.savefig(path,dpi=300, bbox_inches='tight', pad_inches=.3,facecolor = 'w')
 
 #plt.show()      # comment/uncomment if you want to display the plot
 plt.close()
 
 file = open('PDF.dat', "w")
-file.write(dist_str + '\n')    # header
+file.write(en_str + dist_str + '\n')    # header
 for i in range(len(best_dist[1])):
     file.write(str(round(best_dist[1][i],2)) + ' ')
 file.close()
