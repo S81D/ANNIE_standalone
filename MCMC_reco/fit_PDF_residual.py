@@ -248,7 +248,7 @@ data.plot(kind='hist', bins=50, density=True, alpha=0.5, label='Data', legend=Tr
 param_names = (best_dist[0].shapes + ', loc, scale').split(', ') if best_dist[0].shapes else ['loc', 'scale']
 param_str = ', '.join(['{}={:0.2f}'.format(k,v) for k,v in zip(param_names, best_dist[1])])
 dist_str = '{}({})'.format(best_dist[0].name, param_str)
-print('Best-fit distribution and parameters: ',dist_str)
+print('\nBest-fit distribution and parameters: ',dist_str)
 
 ax.set_title('Timing Residual PDF best fit distribution ' + en_str + '\n' + dist_str)
 ax.set_xlabel('hit time residual [s]')
@@ -260,9 +260,9 @@ path = 'hit time residual PDF (nct) fit ' + en_str + '.png'
 plt.close()
 
 file = open('PDF.dat', "w")
-file.write(en_str + dist_str + '\n')    # header
+file.write(en_str + ' ' + dist_str + '\n')    # header
 for i in range(len(best_dist[1])):
     file.write(str(round(best_dist[1][i],2)) + ' ')
 file.close()
 
-print('\ndone')
+print('\ndone\n')
