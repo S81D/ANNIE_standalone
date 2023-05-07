@@ -57,7 +57,7 @@ burn_in_steps = 50      # number of burn-in steps to "feel out" the probability 
 n_steps = 100           # number of steps for walkers in the primary run
 prg_bar = False         # enable/disable progress bar. For grid submission, set = False
 
-save_picture = True     # specify whether you want to save the .png corner plots
+save_picture = False    # specify whether you want to save the .png corner plots
 save_first_ten = False  # often useful for diagnostics, see if the reco algorithm is working before doing more events
 save_frequency = 10     # can be used as code update, if save_picture is enabled, the code will save every (save_frequency)-th picture
                         # set to 1 if you want all pictures saved 
