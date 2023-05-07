@@ -17,7 +17,7 @@ using namespace std;
 void true_MC(){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
 	TTree *tr=(TTree*)f->Get("phaseIITriggerTree"); // creates the TTree object
   	
 	// keep in mind this is the "raw" event information, and it has not been clusterized.
@@ -47,7 +47,7 @@ void true_MC(){
 
 	// create and open the file where the contents will be dumped
         ofstream myfile;
-        myfile.open ("WCSim Data/30MeV/mctruth_electron_swarm_30MeV.dat");
+        myfile.open ("WCSim_Data/30MeV/mctruth_electron_swarm_30MeV.dat");
  
         // first line are the column headers (modify if needed)
         myfile << "eventNumber true_vertex_X true_vertex_Y true_vertex_Z true_t0 true_dir_X true_dir_Y true_dir_Z "
