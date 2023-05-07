@@ -47,8 +47,8 @@ DisplayGeometry = False
 run_all = False               # will run all events
 
 # pass the starting and ending event number as arguments to the script
-start_event = sys.argv[1]     # if run_all == True, these won't matter
-final_event = sys.argv[2]     # can pass this as: N_events (total number of events; if running like 100:N_events)
+start_event = int(sys.argv[1])     # if run_all == True, these won't matter
+final_event = int(sys.argv[2])     # can pass this as: N_events (total number of events; if running like 100:N_events)
 
 # 4. ---------------
 # emcee parameters
