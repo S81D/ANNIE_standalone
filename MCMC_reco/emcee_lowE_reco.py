@@ -286,12 +286,12 @@ radius_detector = (max(z_position) - min(z_position))/2
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-print('\nData Loaded')
+print('\nData Loaded\n')
 print('#################')
 print('\nN Events = ', N_events)
 
 if run_all == False:
-	print('\nRunning ', (start_event + final_event), ' events (start = event ', start_event, ', final = event ', final_event, ')') 
+	print('\nRunning ', (start_event + final_event), ' event(s) (start = event ', start_event, ', final = event ', final_event, ')') 
 
 else:
 	print('\nRunning over all (', N_events, ') events')
