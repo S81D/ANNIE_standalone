@@ -34,7 +34,7 @@ import pandas as pd
 # 1. ---------------
 # path extension names for .dat files containing root tree entries
 position = 'swarm_15MeV'
-folder = 'WCSim Data/15MeV/'
+folder = 'WCSim_Data/15MeV/'
 
 # 2. ---------------
 # Display the detector Geometry with truth vertices? (Will display external window)
