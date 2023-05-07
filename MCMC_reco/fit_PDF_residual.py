@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 # # # # # # # # # # # # # # # 
 # Parameterization -- load in the .dat files exported from TA root files
-en_str = '30MeV                 # specifies the title, output file header, and path for input files
+en_str = '30MeV'                 # specifies the title, output file header, and path for input files
 position = 'swarm_' + en_str
 folder = 'WCSim Data/' + en_str + '/'
 
