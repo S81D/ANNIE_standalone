@@ -144,7 +144,7 @@ Energy = truth_data.T[8]       # initial energy of the primary particle
 Track_Length = truth_data.T[9] # track length of the primary particle in water (distance from start point to stop point or the
                                # distance from the start vertex to a tank wall (if the particle exited))
 
-# sort events that dont have an associated cluster event number
+# sort events that have an associated cluster event number
 vtX = [vtX[int(x)]/100 for x in eventNumber if x in clustereventNumber]
 vtY = [vtY[int(x)]/100 for x in eventNumber if x in clustereventNumber]
 vtZ = [vtZ[int(x)]/100 for x in eventNumber if x in clustereventNumber]
