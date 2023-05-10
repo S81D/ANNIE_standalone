@@ -291,7 +291,7 @@ print('#################')
 print('\nN Events = ', N_events)
 
 if run_all == False:
-	print('\nRunning ', (start_event + final_event), ' event(s) (start = event ', start_event, ', final = event ', final_event, ')') 
+	print('\nRunning ', (final_event - start_event), ' event(s) (start = event ', start_event, ', final = event ', final_event, ')') 
 
 else:
 	print('\nRunning over all (', N_events, ') events')
