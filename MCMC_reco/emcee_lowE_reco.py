@@ -566,10 +566,10 @@ try:
             p0[i][0] = (p0[i][0]*2*radius_detector) - radius_detector  # -radius to +radius
             p0[i][1] = (p0[i][1]*height_detector) - height_detector/2  # -height to +height
             p0[i][2] = (p0[i][2]*2*radius_detector) - radius_detector  # -radius to +radius
-
-            p0[i][3] = ((p0[i][3] + 10 - (sum(HIT[event][3])/len(HIT[event][3])))/(1e9))*c  
-            # narrow region around 10 ns before the mean hit time
-            # MC says that the average hit time for low E electrons is ~10 ns after emission time t0, so this is probably okay
+	
+            p0[i][3] = ((p0[i][3]*2 - 1 + (clusterTime[event] - 10))/(1e9))*c  # 2 ns spread centered around ~10ns before the mean cluster time
+            # narrow initial guess around 10 ns before the mean cluster hit time (before filtering)
+            # MC says that the average hit time for low E electrons is ~10 ns after emission time t0 (from 2.5 to 30 MeV)
 
         # Get the ensemble sampler object
         sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob, args = [HIT[event][0], HIT[event][1], HIT[event][2], HIT[event][3]])
