@@ -14,10 +14,11 @@ using namespace std;
 
 
 // Dump Contents of a Tree with branches to a .txt or .dat file
-void charge_parameters(){
+void charge_parameters(const char* input, const char* output){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	//TFile *f=new TFile("WCSim_Data/electron_center_5MeV.ntuple.root"); // opens the root file
+	TFile *f = new TFile(input);
 	TTree *tr=(TTree*)f->Get("phaseIITankClusterTree"); // creates the TTree object
   
 
@@ -37,7 +38,7 @@ void charge_parameters(){
 	tr->SetBranchAddress("clusterMaxPE",&c_mpe);
 	tr->SetBranchAddress("clusterChargeBalance",&ccb);
         tr->SetBranchAddress("clusterHits",&c_h);
-
+	tr->SetBranchAddress("clusterTime",&c_t);
 
 	//tr->SetBranchAddress("",&);
         //tr->SetBranchAddress("",&);
@@ -45,19 +46,19 @@ void charge_parameters(){
 
 	// create and open the file where the contents will be dumped
 	ofstream myfile;
-	myfile.open ("WCSim_Data/30MeV/charge_event_electron_swarm_30MeV.dat");
-	
+	//myfile.open ("WCSim_Data/charge_event_electron_center_5MeV.dat");
+	myfile.open (output);
+
 	// first line are the column headers (modify if needed)
 	myfile << "eventNumber clusterCharge " 
-	<< "clusterPE clusterMaxPE clusterChargeBalance clusterHits\n";
+	<< "clusterPE clusterMaxPE clusterChargeBalance clusterHits clusterTime\n";
 
   for (int i=0;i<tr->GetEntries();i++){
     // loop over the tree
     tr->GetEntry(i);
     myfile << e_num << " " << c_c << " " << c_pe << " " << c_mpe << " "
-    << ccb << " " << c_h << "\n";// << a12 << " "
+    << ccb << " " << c_h << " " << c_t << "\n";// << a12 << " "
   }
   myfile.close();
 
-cout <<"done" << endl;
 }

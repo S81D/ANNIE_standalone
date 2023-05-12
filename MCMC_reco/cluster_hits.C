@@ -13,11 +13,12 @@ using namespace std;
 
 
 // Dump Contents of a Tree with branches to a .txt or .dat file
-void cluster_hits(){
+void cluster_hits(const char* input, const char* output){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	TFile *f = new TFile(input);
 	TTree *tr=(TTree*)f->Get("phaseIITankClusterTree"); // creates the TTree object
+
   	
 	// event-level information
 	int e_num;
@@ -45,9 +46,10 @@ void cluster_hits(){
 	Long64_t n = tr->GetEntries();
 
 	ofstream myfile_hits;
-	myfile_hits.open ("WCSim_Data/30MeV/cluster_hits_electron_swarm_30MeV.dat");
+	myfile_hits.open (output);
 	myfile_hits << "EventNumber Channel hitT hitX hitY hitZ hitQ hitPE\n";
 
+	
 	for (Long64_t i=0;i<n;i++){
 		tr->GetEntry(i);
 		ULong_t nsig = fhitT->size();
@@ -67,5 +69,4 @@ void cluster_hits(){
      	}
 	myfile_hits.close();
 	
-cout <<"done" << endl;
 }

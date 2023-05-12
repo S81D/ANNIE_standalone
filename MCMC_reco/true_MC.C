@@ -14,10 +14,10 @@ using namespace std;
 // Also serves to extract any information from the TriggerTree
 
 // Dump Contents of a Tree with branches to a .txt or .dat file
-void true_MC(){
+void true_MC(const char* input, const char* output){
 
   	// specify file and tree name
-	TFile *f=new TFile("WCSim_Data/30MeV/electron_swarm_30MeV.ntuple.root"); // opens the root file
+	TFile *f=new TFile(input); // opens the root file
 	TTree *tr=(TTree*)f->Get("phaseIITriggerTree"); // creates the TTree object
   	
 	// keep in mind this is the "raw" event information, and it has not been clusterized.
@@ -47,7 +47,7 @@ void true_MC(){
 
 	// create and open the file where the contents will be dumped
         ofstream myfile;
-        myfile.open ("WCSim_Data/30MeV/mctruth_electron_swarm_30MeV.dat");
+        myfile.open (output);
  
         // first line are the column headers (modify if needed)
         myfile << "eventNumber true_vertex_X true_vertex_Y true_vertex_Z true_t0 true_dir_X true_dir_Y true_dir_Z "
@@ -62,5 +62,4 @@ void true_MC(){
    	}
    	myfile.close();
 
-cout <<"done" << endl;
 }
