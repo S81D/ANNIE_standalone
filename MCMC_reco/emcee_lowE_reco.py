@@ -506,6 +506,9 @@ def log_prob(Vertex, X, Y, Z, T):   # first arg is the N-dim np array (position 
     # we can actually confine the walkers to a finite volume of the parameter space
     # if the vertex position is outside the tank (sufficiently far), return -infinity
     # - inf outside of the volume corresponds to the logarithm of 0 prior probability
+
+    # Currently, only positional priors are used. Testing on a few events showed adding a prior for time
+    # didn't dramatically change the results. Maybe add a smart one in the future (~3 meters in ct is ~14 ns travel time in water)
     
     if ((np.abs(Vertex[0]) < 3) and (np.abs(Vertex[1]) < 3) and (np.abs(Vertex[2]) < 3)):
     
