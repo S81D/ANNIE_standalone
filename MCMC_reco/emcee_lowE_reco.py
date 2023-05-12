@@ -81,6 +81,7 @@ clusterPE = event_data.T[2]
 clusterMaxPE = event_data.T[3]
 clusterChargeBalance = event_data.T[4]
 clusterHits = event_data.T[5]
+clusterTime = event_data.T[6]
 
 N_events = len(clustereventNumber)
 
