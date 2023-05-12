@@ -16,7 +16,7 @@ $$
 t_{res,i}(v) \equiv t_i - \frac{|\bf{v} - \bf{h_i}|}{c^{'}}
 $$
 
-where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize over our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 5-30 MeV), and it has a simple form that is easy to work with:
+where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize over our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 2.5-30 MeV), and it has a simple form that is easy to work with:
 
 If $Y$ is a standard normal r.v. and $V$ is an independent chi-square random variable with $k$ degrees of freedom, then:
 
@@ -63,6 +63,9 @@ to be updated
 sh extract_info.sh
 ```
 You will have produced corresponding `.dat` files for each script in the `/WCSim_Data` folder (each energy has a subdirectory).
+4. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running either `fit_PDF_residual.py` or `filter_hits_PDF.py` will fit the hit timing residual data with a nct PDF, and write to that .dat file. There are two codes to do this (an ongoing analysis):
+      - `fit_PDF_residual.py` will fit all of the data (all hits in a given cluster across events).
+      - `filter_hits_PDF.py` will first filter the hits exactly the same as the emcee reconstruction algorithm (useful for checking the hit filtering without having to run the full reconstruction code), but will then fit a PDF to the filtered hit times, not all of the hit times. This is currently being tested to see if it will yield better reconstructed vertices than the full hit timing.
 
 (Running the code)
 1. Modify `emcee_lowE_reco.py` for the correct path names and other configuration information. This parametrization is at the top of the script.
