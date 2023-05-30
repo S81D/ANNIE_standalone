@@ -53,8 +53,8 @@ final_event = int(sys.argv[2])     # can pass this as: N_events (total number of
 # 4. ---------------
 # emcee parameters
 nwalkers = 1000         # number of walkers
-burn_in_steps = 50      # number of burn-in steps to "feel out" the probability space
-n_steps = 100           # number of steps for walkers in the primary run
+burn_in_steps = 25      # number of burn-in steps to "feel out" the probability space
+n_steps = 50            # number of steps for walkers in the primary run
 prg_bar = False         # enable/disable progress bar. For grid submission, set = False
 
 save_picture = False    # specify whether you want to save the .png corner plots
