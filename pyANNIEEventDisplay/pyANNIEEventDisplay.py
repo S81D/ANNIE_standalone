@@ -3,24 +3,11 @@
 # ------------------------------------------------------------------------ #
 #    The Event Display shows the tank PMT's response to simulated events   #
 #  events from WCSim. The Timing and Hit information extracted from WCSim  #
-#              are displayed in 2D and 3D Event Display Plots.             #
-#  The simulated detector response of each ANNIEEvent is first put through #
-#  the BeamClusterMC Toolchain in Toolanalysis, which produces Tree-level  #
-#   information. Within the ToolChain, clusterization of the hits filters  # 
-#   events based on their spacings in time, using the ClusterFinder and    #
-#   ClusterClassifier Tools. These tools can be configured with varying    #
-#      time intervals, but commonly they are used with 100ns spacings.     #
-# Thus the hits we observe in this event display are the "clustered" hits, #
-#   i.e. hits within some designated window of time. The event-level and   #
-#  hit-level information is extracted from the ROOT Tree files and dumped  #
-#             into .dat files which are read in by this code.              #
-#    MC Truth information is also loaded in about the primary particle.    #    
-# ------------------------------------------------------------------------ #
-#                                 TLDR:                                    #
-#  Event Display of the PMT response to WCSim simulated, clustered Events  #
+#                 are displayed in 2D Event Display Plots.                 #
+#    MC Truth information is also displayed about the primary particle.    #    
 # ------------------------------------------------------------------------ #
 #                         Author: Steven Doran                             #
-#                   Last Date of Modification: 5/1/23                      #
+#                    Last Date of Modification: June 2023                  #
 ############################################################################
 
 import numpy as np
