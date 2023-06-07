@@ -18,12 +18,14 @@ root -l scriptname.C
 ```
 You will have produced corresponding `.dat` files for each script in the `/Extracted_Data` folder.
 
+*** Need to change this to be automated, like the ```MCMC_reco``` folder.
+
 4. Run the event display script `python3 pyANNIEEventDisplay.py`. Edit the script as needed. Event Display plots are saved in `2D_Plots`.
 
 ##
 Notes: 
-- `FullTankPMTGeometry.csv` contains the geometry, locations, type, and overall information of the PMTs and is important for the jupyter notebook.
+- `pyANNIEEventDisplay3D.ipynb` is the 3D event display. Fire up a jupyternotebook to view the events in 3D. Better used on an event-by-event basis, as each event generates 2 interactive windows.
+- There is a png file displaying the ANNIE PMT geometry. In the 3D event display, there is an option to disable the PMT's that weren't hit - this makes it much easier to visualize the event and the hit PMTs. This png file is here for reference. 
+- `FullTankPMTGeometry.csv` contains the geometry, locations, type, and overall information of the PMTs and is important for the scripts.
 * `\Extracted_Data` contains some example .dat files produced from the .C scripts.
-+ The `2D_Plots` directory contains examples of the event display images.
-+ There exists a .ipynb script (original) that will display plots in 3D corresponding to the Tank's geometry. This is not included.
-+ Unless you want hundreds of photos, do not run this script for all events. Produce a few at a time.
++ The `2D_Plots` and `3D_Plots` directories contain examples of the event display images.
