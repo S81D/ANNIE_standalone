@@ -16,7 +16,6 @@ import uproot3 as uproot
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import pandas
-from tqdm import trange
 
 
 # ------------------------------------------------------------------- #
