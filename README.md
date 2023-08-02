@@ -9,5 +9,8 @@ This repository contains various subdirectories consisting of standalone analysi
 
 2. **MCMC_reco**
      - Python-based reconstruction algorithm for low energy MC events generated in WCSim. The reconstruction algorithm relies on the affine-invariant Markov-Chain Monte Carlo (MCMC) ensembler sampler to reconstruct the most likely vertex position in (x,y,z,ct). MCMC carried out through the python module, emcee.
+  
+3. **cherenkov_angle**
+     - Python-based cherenkov angle reconstruction for MC events. Tested and works (relatively well) for low energy events (muons, gammas, electrons). 
 
 *Also, for those concerned, ANNIE is Okay*
