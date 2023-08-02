@@ -20,7 +20,7 @@ from tqdm import trange
 
 
 # ------------------------------------------------------------------- #
-file = uproot.open('Extracted_Data/muon_swarm/muon_swarm.ntuple.root')
+file = uproot.open('MC_Data/muon_swarm/muon_swarm.ntuple.root')
 # ------------------------------------------------------------------- #
 
 primary_particle = r'$\mu^-$'              # MC particle type
