@@ -39,6 +39,8 @@ to include in their histogram) select the most populated bin. Since there may be
 multiple bins, we sum up the neighboring bins to the left and right of $\theta_i$ (so 3 bins in total), and select the $\theta_i$ with the highest count
 total. This is taken as the reconstructed cherenkov angle.
 
+Since the effects of reflection, scattering, dark noise, etc... can all contribute to muddying the cherenkov cone profile, some hit filtering is utilized. The filtering was carried out trying to optimize the expected angle distributions for low energy gammas (~42 degrees or more), muons (~35 degrees or less), and electrons (~42 degrees). Hit filtering based on timing residuals is included in the code, but this script (for now) grabs the top 10 charged hits (based on p.e. values) and reconstructs the 3-hit combinations from those. This seems to reproduce the expected angle distributions the best (and remains a quick and dirty technique) and gives the best rejection yields for gamma and electrons vs low energy muons.
+
 
 - Currently designed for WCSim generated events (MC).
 - Need the python modules `uproot3`, `tqdm`, and `itertools`.
