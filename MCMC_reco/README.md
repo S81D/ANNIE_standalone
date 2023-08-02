@@ -54,7 +54,7 @@ to be updated
 
 ## How to use (for MC)
 
-(Pre-steps, in ToolAnalysis)
+(Pre-steps, including ToolAnalysis usage)
 1. Run the BeamClusterMC ToolChain withinin ToolAnalysis to extract information from the WCSim output .ROOT file. The clusterization tools will filter hits within an alloted time interval (defined as a cluster) and pass these hits along as an event to the PhaseIITreeMaker tool. This tool will create a .ROOT file containing trees (cluster-level and raw hits) and histograms of various parameters of the events.
 2. Store the .ROOT output file from ToolAnalysis into the `/WCSim_Data` folder.
 3. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running either `fit_PDF_residual.py` or `filter_hits_PDF.py` will fit the hit timing residual data with a nct PDF, and write to that .dat file. There are two codes to do this (an ongoing analysis):
