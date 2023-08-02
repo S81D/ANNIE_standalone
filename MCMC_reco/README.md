@@ -54,23 +54,16 @@ to be updated
 
 ## How to use (for MC)
 
-(Pre-steps, in ToolAnalysis and using .C scripts to extract the relevant hits information)
+(Pre-steps, in ToolAnalysis)
 1. Run the BeamClusterMC ToolChain withinin ToolAnalysis to extract information from the WCSim output .ROOT file. The clusterization tools will filter hits within an alloted time interval (defined as a cluster) and pass these hits along as an event to the PhaseIITreeMaker tool. This tool will create a .ROOT file containing trees (cluster-level and raw hits) and histograms of various parameters of the events.
 2. Store the .ROOT output file from ToolAnalysis into the `/WCSim_Data` folder.
-3. Using `extract_info.sh`, extract the root tree information. This shell script will run `charge_parameters.C`, `cluster_hits.C`, and `true_MC.C` automatically, extracting hits and cluster information from each event into .dat files. `energies.list` contains a list of the energies you want to loop over. Modify depending on which root files you have produced.
-      - Run the shell script:
-```
-sh extract_info.sh
-```
-You will have produced corresponding `.dat` files for each script in the `/WCSim_Data` folder (each energy has a subdirectory).
-
-4. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running either `fit_PDF_residual.py` or `filter_hits_PDF.py` will fit the hit timing residual data with a nct PDF, and write to that .dat file. There are two codes to do this (an ongoing analysis):
+3. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running either `fit_PDF_residual.py` or `filter_hits_PDF.py` will fit the hit timing residual data with a nct PDF, and write to that .dat file. There are two codes to do this (an ongoing analysis):
       - `fit_PDF_residual.py` will fit all of the data (all hits in a given cluster across events).
       - `filter_hits_PDF.py` will first filter the hits exactly the same as the emcee reconstruction algorithm (useful for checking the hit filtering without having to run the full reconstruction code), but will then fit a PDF to the filtered hit times, not all of the hit times. This is currently being tested to see if it will yield better reconstructed vertices than the full hit timing.
 
 (Running the code)
-1. Modify `emcee_lowE_reco.py` for the correct path names and other configuration information. This parametrization is at the top of the script.
-2. Run the code `python3 emcee_lowE_reco.py`. It will perform hit filtering and reconstruct the verticies. You will eventually be left with the corresponding .dat files and (if specified) emcee plots depicting the walker distributions, in comparison with the truth vertex info.
+1. Modify `emcee_lowE_reco.py` for the correct path names and other configuration information. The parametrization is at the top of the script.
+2. Run the code `python3 emcee_lowE_reco.py <starting_event> <ending_event>`. The two inputs provided are the starting and ending event number. The code will perform hit filtering and reconstruct the verticies. You will eventually be left with the corresponding .dat files and (if specified) emcee plots depicting the walker distributions, in comparison with the truth vertex info.
 
 ##
 Files and Directories included:
@@ -78,7 +71,5 @@ Files and Directories included:
 * `\emcee_files` is where the final reconstructed vertex positions and errors will be placed. It contains some example .dat files produced from the main reconstruction algorithm.
 * `\emcee_plots` is the directory where (if specified) the emcee corner plots will be produced. These show the walker distributions in each dimension, along with the associated truth (MC) vertex information.
 * `PDF.dat` is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF (approximately non-central student's t).
-* `extract_info.sh` is a shell script for automatically extracting the event information from the root tree.
-* `energies.list` is a list of energies you want to loop over for the shell script above.
-* `\WCSim_Data` contains the MC hit root trees from ToolAnalysis, and is where the .dat generated files (from the root trees) will be produced, and called from in the main algorithm.
+* `\WCSim_Data` contains the MC hit root trees from ToolAnalysis.
 * `reco_dependencies.sh` is a bash script containing commands for downloading the required python dependencies. Comment out the dependencies you already have. Have not tested this.
