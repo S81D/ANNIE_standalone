@@ -95,35 +95,6 @@ for i in range(N_clusters):
     origin[i][1] = vtX[i]; dir_vector[i][1] = dirX[i]
     origin[i][2] = vtY[i]; dir_vector[i][2] = dirY[i]
 
-    
-# # # # # # # # # # # # # # # # # # # # # # # # # # #
-### Load in and Construct the Detector Geometry ###
-
-# Read Geometry.csv file to get PMT location info
-df = pandas.read_csv('FullTankPMTGeometry.csv')
-
-channel_number = []; location = []; panel_number = []
-x_position = []; y_position = []; z_position = []
-
-# The LoadGeometry File does not share the same origin point as the WCSim output after ToolAnalysis.
-
-# vertical center (y) is at a height of y = -14.46 cm
-# x-axis is fine
-# z-axis (beamline) is offset by 1.681 m
-# tank center is therefore at (0,-14.46, 168.1) [cm]
-
-for i in range(len(df['channel_num'])):   # loop over PMTs
-    channel_number.append(df['channel_num'][i])
-    location.append(df['detector_tank_location'][i])
-    x_position.append(df['x_pos'][i]+0)
-    y_position.append(df['y_pos'][i]+0.1446)
-    z_position.append(df['z_pos'][i]-1.681)
-    panel_number.append(df['panel_number'][i])
-
-# Find the dimensions of the detector (radius, height, etc..)
-height_detector = max(y_position) - min(y_position)
-radius_detector = (max(z_position) - min(z_position))/2   
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 print('\n#################')
@@ -131,8 +102,6 @@ print('\nNumber of Events = ', N_events)
 print('Number of Clusters = ', N_clusters)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 
