@@ -3,7 +3,7 @@
 # This script can generate a distribution of reconstructed cherenkov angles across events.
 # It will also export the reconstructed angles for each event/cluster to a .txt file.
 
-# Author: Steven Doran     August 2023
+# Author: Steven Doran     October 2023
 
 import sys                      
 import numpy as np
@@ -208,60 +208,31 @@ def C_angle(origin,center,radius,height):
     # angle is as simple as tan(theta) = radius/l
     angle = np.rad2deg(np.arctan(radius/l))
     
-    
     return angle
 
 
 
 # Hit Filtering functions
 
-
-# based on time residuals
-
-def time_selection(TW,origin,hitX,hitY,hitZ,hitT):
+def time_selection(hitT):
     
-    c = 299792458  # [m/s]
-    c = c/(4/3)    # refractive index of water
+    t_res_i = hitT
+    TW = 13                  # max distance between PMTs is ~3.75m, or ~13ns in water
     
-    # calculate hit timing residuals
-    t_res_i = []
-    for i in range(len(hitX)):
-        d_pos = np.abs(np.sqrt( (origin[0] - hitZ[i])**2  + \
-                                   (origin[1] - hitX[i])**2  +  (origin[2] - hitY[i])**2 ))
-        tri = (hitT[i])/(1e9)  -  d_pos/c   # t0 = 0 for MC
-        t_res_i.append(tri*1e9)
-    
-    # sort the timing residuals, keep the index ordering
+    # sort the hit times, keep the index ordering
     sorted_index = np.argsort(t_res_i)   # contains the true indicies of the hitT array, sorted by residuals
     t_res_i.sort()
     
-    time_window = TW     # hit time allowance
-    
-    t_start = math.floor(min(t_res_i)); t_end = math.ceil(max(t_res_i))
-    count = [[], [], []]    
-    for i in range(t_start, t_end, 1):    # 1 ns windows
-        lw = i; hw = i+TW
-        count[0].append(lw); count[1].append(hw)
-        
-        #lw = t_res_i[i]; hw = t_res_i[i] + time_window
-        #count[0].append(lw); count[1].append(hw)
-        temp = []
-        for j in range(len(t_res_i)):     # not an error, looping over the array twice
-            if hw >= t_res_i[j] >= lw:
-                temp.append(t_res_i[j])
-        count[2].append(len(temp))
-        
-        if hw > t_end:
-                break
-            
-    in_val = count[2].index(max(count[2]))     # preference windows with lower time residuals (select first appearence of max value)
-    
+    time_window = TW         # hit time allowance
+    t_start = min(t_res_i)   # first cluster hit time
+
     save = []
     for i in range(len(t_res_i)):
-        if count[0][in_val] <= t_res_i[i] <= count[1][in_val]:
+        if t_res_i[i] < (t_start + TW): 
             save.append(sorted_index[i])
     
     return save
+
 
 
 # Grab the top 10 charged hits (what we use)
@@ -276,9 +247,8 @@ def charge_selection(N_hits,hitPE):
     return save
 
 
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-
-
 
 HIT = [[] for i in range(N_clusters)]        # final, filtered, reduced hits list
 for i in range(len(HIT)):
@@ -291,8 +261,7 @@ for event in range(N_clusters):
     
     filtered_hits = [[], [], [], [], [], [], []]   # x,y,z,t, + channel + p.e. + origin
     
-    hit_indices = charge_selection(10, hitPE[event])
-    
+    hit_indices = time_selection(hitT[event])   # grab hits that occur w/in our time window
     
     for i in range(len(hitT[event])):
         
@@ -301,28 +270,25 @@ for event in range(N_clusters):
             if Channel[event][i] not in filtered_hits[4]:    # discard multiple hits on the same PMT
 
                 filtered_hits[3].append(hitT[event][i])
-
                 filtered_hits[0].append(hitX[event][i])      # to keep the indexing consistent
                 filtered_hits[1].append(hitY[event][i])
                 filtered_hits[2].append(hitZ[event][i])
-
                 filtered_hits[4].append(Channel[event][i])   
-
                 filtered_hits[5].append(hitPE[event][i])
-
-
-
                 filtered_hits[6].append(origin[event])
                 
     
+    hit_indices2 = charge_selection(10, filtered_hits[5])
+    
     for i in range(len(filtered_hits[0])):
-        
-        HIT[event][0].append(filtered_hits[0][i])
-        HIT[event][1].append(filtered_hits[1][i])
-        HIT[event][2].append(filtered_hits[2][i])
-        HIT[event][3].append(filtered_hits[3][i])
-        HIT[event][4].append(filtered_hits[4][i])
 
+        if (i in hit_indices2):
+        
+            HIT[event][0].append(filtered_hits[0][i])
+            HIT[event][1].append(filtered_hits[1][i])
+            HIT[event][2].append(filtered_hits[2][i])
+            HIT[event][3].append(filtered_hits[3][i])
+            HIT[event][4].append(filtered_hits[4][i])
 
 
 
@@ -335,29 +301,31 @@ print('\nGenerating 3-hit PMT combinations...')
 
 for i in trange(N_clusters):
     
-    if clusterTime[i] < 20 and clusterHits[i] > 10:
+    if clusterNumber[i] == 0 and clusterTime[i] < 50:     # try to limit secondary clusters and decay particles for MC
+
+        if (-0.6 < vtX[i] < 0.6) and (-0.6 < vtZ[i] < 0.6) and (-1 < vtY[i] < 1):   # limit investigation to our FV (MC)
     
-        a = [ix for ix in range(len(HIT[i][0]))]    # n possible hits (assigned by index)
-        b = list(itertools.combinations(a,3))       # all possible 3-hit combinations
-
-        for j in range(len(b)):   # loop over 3-hit combinations
-
-            break_it = False
-
-            # check if PMT hits are unique
-            pmt_ids = 0
-            for k in range(3):
-                check = HIT[i][4][b[j][k]]
-                if pmt_ids == check:
-                    break_it = True
+            a = [ix for ix in range(len(HIT[i][0]))]    # n possible hits (assigned by index)
+            b = list(itertools.combinations(a,3))       # all possible 3-hit combinations
+    
+            for j in range(len(b)):   # loop over 3-hit combinations
+    
+                break_it = False
+    
+                # check if PMT hits are unique
+                pmt_ids = 0
+                for k in range(3):
+                    check = HIT[i][4][b[j][k]]
+                    if pmt_ids == check:
+                        break_it = True
+                    else:
+                        pmt_ids = HIT[i][4][b[j][k]]
+    
+                if break_it == True:
+                    continue   # do not append the 3-hit PMT combo
                 else:
-                    pmt_ids = HIT[i][4][b[j][k]]
-
-            if break_it == True:
-                continue   # do not append the 3-hit PMT combo
-            else:
-
-                saved_combos[i].append(b[j])
+    
+                    saved_combos[i].append(b[j])
 
 
 
@@ -387,7 +355,6 @@ for e in trange(N_clusters):
 
                 angle = C_angle(vertex, center, radius, height)
                 angle_dump[e].append(angle)
-
 
 
 
