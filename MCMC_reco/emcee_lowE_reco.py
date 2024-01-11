@@ -445,7 +445,7 @@ try:
                     str(clusters[event].event_number) + ' ' + str(clusters[event].cluster_number) + ' ' + \
                     str(reco_error[0]) + ' ' + str(reco_error[1]) + ' ' + str(reco_error[2]) + ' ' + str(reco_error[3]) + '\n')
         
-        print('Total Reconstructed Error: ', round(total_error,2), ' cm\n')
+        print('Total Reconstructed Error: ', round(total_error,2), ' cm')
 
 finally:            # execute even with errors (or closing the program)
     file1.close()
