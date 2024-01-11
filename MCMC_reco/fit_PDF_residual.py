@@ -4,134 +4,106 @@
 # This kernal will read in the time res. data and produce a PDF with the best fit, from a list of over 100
 # in the scipy library. We can use this to investigate which continous PDF will work best to model our time residual PDF.
 
+import sys
+import os
 import warnings
+import matplotlib
 import numpy as np
 import pandas as pd
+from tqdm import trange
+import uproot3 as uproot
 import scipy.stats as st
 import statsmodels.api as sm
-from scipy.stats._continuous_distns import _distn_names
-import matplotlib
 import matplotlib.pyplot as plt
+from scipy.stats._continuous_distns import _distn_names
 
 
 # ----------------------------------------------------------- #
 # first, load in MC data
 
-# # # # # # # # # # # # # # # 
-# Parameterization -- load in the .dat files exported from TA root files
-en_str = '30MeV'                 # specifies the title, output file header, and path for input files
-position = 'swarm_' + en_str
-folder = 'WCSim_Data/' + en_str + '/'
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+file_name = ['WCSim_Data/michel_1.ntuple.root']
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+class Cluster:
+    def __init__(self,file_number,event_number,cluster_number,pe,time,Qb,n_hits,hitX,hitY,hitZ,hitT,hitPE,
+                 vtX=None,vtY=None,vtZ=None,energy=None,t_res=None):
+        self.file_number = file_number
+        self.event_number = event_number
+        self.cluster_number = cluster_number
+        self.pe = pe
+        self.time = time
+        self.Qb = Qb
+        self.n_hits = n_hits
+        self.hitX = hitX
+        self.hitY = hitY
+        self.hitZ = hitZ
+        self.hitT = hitT
+        self.hitPE = hitPE
+        self.vtX = vtX
+        self.vtY = vtY
+        self.vtZ = vtZ
+        self.energy = energy
+        self.t_res = t_res
+        
+clusters = []
+        
 # # # # # # # # # # # # # # #
-# Event-level information
-path_charge = folder + 'charge_event_electron_' + position + '.dat'
-event_header = np.loadtxt(path_charge, dtype = str, delimiter = None, max_rows = 1)
-event_data = np.loadtxt(path_charge, dtype = float, delimiter = None, skiprows = 1)
+for files in range(len(file_name)):
 
-clustereventNumber = event_data.T[0]
-clusterCharge = event_data.T[1]
-clusterPE = event_data.T[2]
-clusterMaxPE = event_data.T[3]
-clusterChargeBalance = event_data.T[4]
-clusterHits = event_data.T[5]
+    file = uproot.open(file_name[files])
 
-N_events = len(clustereventNumber)
+    T = file['phaseIITankClusterTree']
+    CEN = T['eventNumber'].array()
+    CN = T['clusterNumber'].array()
+    CPE = T['clusterPE'].array()
+    CCB = T['clusterChargeBalance'].array()
+    CH = T['clusterHits'].array()
+    CT = T['clusterTime'].array()
+    X1 = T['hitX'].array()
+    Y1 = T['hitY'].array()
+    Z1 = T['hitZ'].array()
+    T1 = T['hitT'].array()
+    PE1 = T['hitPE'].array()
 
-# Now load in the hits-level information
-path_hits = folder + 'cluster_hits_electron_' + position + '.dat'
-hits_header = np.loadtxt(path_hits, dtype = str, delimiter = None, max_rows = 1)
-hits_data = np.loadtxt(path_hits, dtype = float, delimiter = None, skiprows = 1)
+    # truth information
+    truth = file['phaseIITriggerTree']
+    en = truth['eventNumber'].array()
+    vx = truth['trueVtxX'].array()
+    vy = truth['trueVtxY'].array()
+    vz = truth['trueVtxZ'].array()
+    ENG = truth['trueMuonEnergy'].array()
+    
+    
+    for i in range(len(CEN)):
+        if CT[i] < 100 and CN[i] == 0:
+            event = Cluster(file_number=files,event_number=CEN[i],cluster_number=CN[i],pe=CPE[i],time=CT[i],
+                Qb=CCB[i],n_hits=CH[i],hitX=X1[i],hitY=Y1[i],hitZ=Z1[i],hitT=T1[i],hitPE=PE1[i],
+                            vtX=vx[CEN[i]]/100,vtY=vy[CEN[i]]/100,vtZ=vz[CEN[i]]/100,energy=ENG[CEN[i]]
+            )
+            clusters.append(event)
+    
 
-Channel = [[] for i in range(N_events)]
-hitT = [[] for i in range(N_events)]      # The x,y,z is adjusted correctly in the ToolChain for this Event Display
-hitX = [[] for i in range(N_events)]
-hitY = [[] for i in range(N_events)]
-hitZ = [[] for i in range(N_events)]
-hitQ = [[] for i in range(N_events)]
-hitPE = [[] for i in range(N_events)]
-
-count = 0
-for j in range(len(hits_data.T[0])):    # loop over all hits (N events x M hits per event)
-    if (j == 0):
-        Channel[count].append(hits_data.T[1][j])
-        hitT[count].append(hits_data.T[2][j])      # the hitX, hitY, hitZ contain the position of the
-        hitX[count].append(hits_data.T[3][j])      # PMTs that were hit
-        hitY[count].append(hits_data.T[4][j])      
-        hitZ[count].append(hits_data.T[5][j])
-        hitQ[count].append(hits_data.T[6][j])
-        hitPE[count].append(hits_data.T[7][j])
-        
-    elif (j != 0):
-        if hits_data.T[0][j] == hits_data.T[0][j-1]:
-            Channel[count].append(hits_data.T[1][j])
-            hitT[count].append(hits_data.T[2][j])
-            hitX[count].append(hits_data.T[3][j])
-            hitY[count].append(hits_data.T[4][j])
-            hitZ[count].append(hits_data.T[5][j])
-            hitQ[count].append(hits_data.T[6][j])
-            hitPE[count].append(hits_data.T[7][j])
-        else:
-            count = count + 1
-            Channel[count].append(hits_data.T[1][j])
-            hitT[count].append(hits_data.T[2][j])
-            hitX[count].append(hits_data.T[3][j])
-            hitY[count].append(hits_data.T[4][j])
-            hitZ[count].append(hits_data.T[5][j])
-            hitQ[count].append(hits_data.T[6][j])
-            hitPE[count].append(hits_data.T[7][j])
-            
-# Load in the MC Truth information (there will be more events than clusters -- need to sort and assign them)
-path_truth = folder + 'mctruth_electron_' + position + '.dat'
-truth_header = np.loadtxt(path_truth, dtype = str, delimiter = None, max_rows = 1)
-truth_data = np.loadtxt(path_truth, dtype = float, delimiter = None, skiprows = 1)
-
-eventNumber = truth_data.T[0]  # Event Number
-vtX = truth_data.T[1]          # {vertex information   
-vtY = truth_data.T[2]          # ..
-vtZ = truth_data.T[3]          # }
-vtT = truth_data.T[4]           # "vertex time" i.e. initial time
-dirX = truth_data.T[5]         # {direction vectors of primary particle
-dirY = truth_data.T[6]         # ..
-dirZ = truth_data.T[7]         # }
-Energy = truth_data.T[8]       # initial energy of the primary particle
-Track_Length = truth_data.T[9] # track length of the primary particle in water (distance from start point to stop point or the
-                               # distance from the start vertex to a tank wall (if the particle exited))
-
-# sort events that dont have an associated cluster event number
-vtX = [vtX[int(x)]/100 for x in eventNumber if x in clustereventNumber]
-vtY = [vtY[int(x)]/100 for x in eventNumber if x in clustereventNumber]
-vtZ = [vtZ[int(x)]/100 for x in eventNumber if x in clustereventNumber]
-# divide by 100     ^  to convert vertex units [cm] into [m]
-vtT = [vtT[int(x)] for x in eventNumber if x in clustereventNumber]
-dirX = [dirX[int(x)] for x in eventNumber if x in clustereventNumber]
-dirY = [dirY[int(x)] for x in eventNumber if x in clustereventNumber]
-dirZ = [dirZ[int(x)] for x in eventNumber if x in clustereventNumber]
-Energy = [Energy[int(x)] for x in eventNumber if x in clustereventNumber]
-Track_Length = [Track_Length[int(x)] for x in eventNumber if x in clustereventNumber]
-        
-# # # # # # # # # # # # # # # # # # # # # # # # # # #
-# MC Truth Vertex and direction information
-origin = np.zeros([N_events,3])
-dir_vector = np.zeros([N_events,3])
-for i in range(N_events):
-    origin[i][0] = vtZ[i]; dir_vector[i][0] = dirZ[i]
-    origin[i][1] = vtX[i]; dir_vector[i][1] = dirX[i]
-    origin[i][2] = vtY[i]; dir_vector[i][2] = dirY[i]
+print('\nNumber of Clusters = ', len(clusters))
 
 # ----------------------------------------------------------- #
 
 # Calculate the hit timing residual PDF
 
-c = 299792458  # [m/s]i
+c = 299792458  # [m/s]
 c = c/(4/3)    # refractive index of water
 
-t_res_i = [[] for i in range(N_events)]
-for i in range(N_events):
-    for j in range(len(hitT[i])):
-        d_pos = np.abs(np.sqrt( (vtX[i] - hitX[i][j])**2  +  (vtY[i] - hitY[i][j])**2  +  (vtZ[i] - hitZ[i][j])**2 ))
-        tri = (hitT[i][j])/(1e9)  -  d_pos/c   # t0 (vtT/vertex time) = 0, here -- also adjust hit times to [sec]
-        t_res_i[i].append((tri)*1e9)
+for i in range(len(clusters)):
+    TRES = []
+    for j in range(len(clusters[i].hitT)):
+        xx = clusters[i].hitX[j]; yy = clusters[i].hitY[j]; zz = clusters[i].hitZ[j]; tt = clusters[i].hitT[j]
+        d_pos = np.abs(np.sqrt( (clusters[i].vtX - clusters[i].hitX[j])**2  +  \
+                               (clusters[i].vtY - clusters[i].hitY[j])**2  +  \
+                               (clusters[i].vtZ - clusters[i].hitZ[j])**2 ))
+        tri = (clusters[i].hitT[j])/(1e9) - d_pos/c
+        TRES.append( (tri)*(1e9) )
+    
+    clusters[i].t_res = TRES
 
 # ----------------------------------------------------------- #
 
@@ -143,22 +115,17 @@ def best_fit_distribution(data, bins=100, ax=None):
     # this function is great for searching through the scipy stats library (~100 different PDFs)
     # to find the PDF which best matches the timing residual data. 
     
-    # From previous investigations, it was determined that the non-central student's t distribution
-    # models the WCSim low energy response response well at a range of energies (5-15 MeV, waiting on 30).
-    # Since this distribution is easily described (simple PDF equation), and I have experience using it
-    # in stats class, we will use this as our sample PDF. In scipy, it is tagged as "nct".
-    
     # Get histogram of original data
     y, x = np.histogram(data, bins=bins, density=True)
     x = (x + np.roll(x, -1))[:-1] / 2.0
-
-    # Best holders
     best_distributions = []
 
     # Estimate distribution parameters from data
     for ii, distribution in enumerate([d for d in _distn_names if not d in ['levy_stable', 'studentized_range']]):
-        
-        if ii == 71:    # non-central student's t --> we'll pick out this one
+
+        # disable conditional if statement if you want to test all PDFs
+        #if ii == 71:    # non-central student's t
+        if ii == 20:     # exponnorm
         
             #print("{:>3} / {:<3}: {}".format( ii+1, len(_distn_names), distribution ))
 
@@ -218,23 +185,27 @@ def make_pdf(dist, params, size=10000):
 
     return pdf
 
-# Load data from statsmodels datasets
-t_PDF = []
-for i in range(N_events):
-    for j in range(len(t_res_i[i])):
-        t_PDF.append(t_res_i[i][j])
-data = pd.Series(t_PDF)       # transform data into panda series
+
+# transform data into panda series
+temp = []
+for i in range(len(clusters)):
+    for j in range(len(clusters[i].t_res)):
+        temp.append(clusters[i].t_res[j])
+data = pd.Series(temp)
+
+
+# -------------------------------------------- #
 
 # Plot for comparison
 plt.figure(figsize=(12,8))
-ax = data.plot(kind='hist', bins=50, density=True, alpha=0.5, color=list(matplotlib.rcParams['axes.prop_cycle'])[1]['color'])
+ax = data.plot(kind='hist', bins=100, density=True, alpha=0.5, color=list(matplotlib.rcParams['axes.prop_cycle'])[1]['color'])
 
 # Save plot limits
 dataYLim = ax.get_ylim()
 plt.close()
 
 # Find best fit distribution (in this case, it is only the nct)
-best_distibutions = best_fit_distribution(data, 200, ax)
+best_distibutions = best_fit_distribution(data, int(np.sqrt(len(data))), ax)
 best_dist = best_distibutions[0]
 
 # Make PDF with best params 
@@ -242,25 +213,25 @@ pdf = make_pdf(best_dist[0], best_dist[1])
 
 # Display PDF
 plt.figure(figsize=(12,8))
-ax = pdf.plot(lw=2, label='PDF', legend=True)
-data.plot(kind='hist', bins=50, density=True, alpha=0.5, label='Data', legend=True, ax=ax)
+ax = pdf.plot(lw=2, label='PDF (' + dist_str + ')', legend=True)
+data.plot(kind='hist', bins=100, density=True, alpha=0.5, label='MC Data', legend=True, ax=ax)
 
 param_names = (best_dist[0].shapes + ', loc, scale').split(', ') if best_dist[0].shapes else ['loc', 'scale']
 param_str = ', '.join(['{}={:0.2f}'.format(k,v) for k,v in zip(param_names, best_dist[1])])
 dist_str = '{}({})'.format(best_dist[0].name, param_str)
 print('\nBest-fit distribution and parameters: ',dist_str)
 
-ax.set_title('Timing Residual PDF best fit distribution ' + en_str + '\n' + dist_str)
-ax.set_xlabel('hit time residual [s]')
+ax.set_title('Timing Residual PDF best fit distribution')
+ax.set_xlabel('hit time residual [ns]')
 
-path = 'hit time residual PDF (nct) fit ' + en_str + '.png'
-#plt.savefig(path,dpi=300, bbox_inches='tight', pad_inches=.3,facecolor = 'w')
+path = 'hit time residual PDF (exponorm) fit _ michel e-.png'
+plt.savefig(path,dpi=300, bbox_inches='tight', pad_inches=.3,facecolor = 'w')
 
-#plt.show()      # comment/uncomment if you want to display the plot
-plt.close()
+plt.show()      # comment/uncomment if you want to display the plot
+#plt.close()
 
 file = open('PDF.dat', "w")
-file.write(en_str + ' ' + dist_str + '\n')    # header
+file.write(dist_str + '\n')    # header
 for i in range(len(best_dist[1])):
     file.write(str(round(best_dist[1][i],2)) + ' ')
 file.close()
