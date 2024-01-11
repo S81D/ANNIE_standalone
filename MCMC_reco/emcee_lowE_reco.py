@@ -337,6 +337,12 @@ file3 = open('emcee_files/reco_pos_' + str(a_start) + '_' + str(a_end) + '.dat',
 file4 = open('emcee_files/reco_errors_' + str(a_start) + '_' + str(a_end) + '.dat', "w")
 file5 = open('emcee_files/truth_' + str(a_start) + '_' + str(a_end) + '.dat', "w")
 
+# headers
+file2.write('count file eventNumber clusterNumber total_positional_error[cm]\n')
+file3.write('count file eventNumber clusterNumber X_reco_pos[cm] Y_reco_pos[cm] Z_reco_pos[cm] T_reco_time[ns]\n')
+file4.write('count file eventNumber clusterNumber X_error[cm] Y_error[cm] Z_error[cm] T_error[ns]\n')
+file5.write('count file eventNumber clusterNumber truth_vtX[cm] truth_vtY[cm] truth_vtZ[cm] truth_vtT[ns] energy[MeV]\n')
+
 try:
     
     for event in range(a_start,a_end+1):
@@ -345,11 +351,6 @@ try:
 
         truth_v = [clusters[event].vtX, clusters[event].vtY, clusters[event].vtZ, 0]    # true vertex
 
-        file2.write('count file eventNumber clusterNumber total_positional_error[cm]\n')
-        file3.write('count file eventNumber clusterNumber X_reco_pos[cm] Y_reco_pos[cm] Z_reco_pos[cm] T_reco_time[ns]\n')
-        file4.write('count file eventNumber clusterNumber X_error[cm] Y_error[cm] Z_error[cm] T_error[ns]\n')
-
-        file5.write('count file eventNumber clusterNumber truth_vtX[cm] truth_vtY[cm] truth_vtZ[cm] truth_vtT[ns] energy[MeV]\n')
         file5.write(str(event) + ' ' + str(clusters[event].file_number) + ' ' + str(clusters[event].event_number) + ' ' + str(clusters[event].cluster_number) + ' ' + \
                     str(truth_v[0]*100) + ' ' + str(truth_v[1]*100) + ' ' + str(truth_v[2]*100) + ' ' + str(truth_v[3]) + ' ' + str(clusters[event].energy) + '\n')                    
 
