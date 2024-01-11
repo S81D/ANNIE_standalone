@@ -6,7 +6,7 @@ Will eventually be integrated into the ToolAnalysis framework.
 
 The main algorithm takes information extracted from .ROOT files produced using Tools in ToolAnalysis and performs an affine invariant Markov-Chain Monte Carlo (MCMC) ensembler sampler to reconstruct the most likely vertex position in (x,y,z,ct).
 
-Hit filtering is done prior to ensure the hits fed into MCMC are reflective of a single interaction vertex. Only hit timing is utilized. Eventually a charge-based likelihood can be folded in, which is more relevant for higher energy events (> 30 MeV).
+Hit filtering is done prior to ensure the hits fed into MCMC are reflective of a single interaction vertex. Only hit timing is utilized. Eventually a charge-based likelihood can be folded in, which is more relevant for higher energy events.
 
 ## Likelihood maximization with MCMC
 
@@ -16,17 +16,9 @@ $$
 t_{res,i}(v) \equiv t_i - \frac{|\bf{v} - \bf{h_i}|}{c^{'}}
 $$
 
-where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution. This will be the PDF in which we sample from to attempt to maximize over our "observed" hit times. Upon fitting many different functions to the hit times, we elect to use a non-central student's t continuous PDF. It fit the low-energy data well (from 2.5-30 MeV), and it has a simple form that is easy to work with:
+where $\bf{v}$ denotes the event vertex position, $\bf{h_i}$ the position of the $i$-th hit PMT, and $c^{'}$ the group velocity of Cherenkov light in water. Ideally, $t_{res,i}$ has the common value to all hit PMTs. The truth emission time here is 0. We can then construct a PDF of the hit-timing residual using many events by fitting the distribution using ```fit_PDF_residual.py```. This will be the PDF in which we sample from to attempt to maximize over our "observed" hit times.
 
-If $Y$ is a standard normal r.v. and $V$ is an independent chi-square random variable with $k$ degrees of freedom, then:
-
-$$
-X = \frac{Y + c}{\sqrt{V/k}}
-$$
-
-where $c$ is the noncentrality parameter. In scipy, the parameters returned for scipy.stats.nct are (df, nc, loc, scale).
-
-Having fit the PDF above, we can use our favorite maximium likelihood function to find the associated likelihood of a given test vertex. Currently, the MCMC algorithm uses Super-K's BONSAI likelihood function:
+Having fit the PDF above with some function, we can use our favorite maximium likelihood function to find the associated likelihood of a given test vertex. Currently, the MCMC algorithm uses Super-K's BONSAI likelihood function:
 
 $$
 \ln{L}(x,t_0) = \ln{\prod_{i=1}^{N} P(\Delta t_i (x))} = \sum_{i=1}^{N} \ln{P(t_i - tof_i (x) - t_0)}
@@ -57,9 +49,7 @@ to be updated
 (Pre-steps, including ToolAnalysis usage)
 1. Run the BeamClusterMC ToolChain withinin ToolAnalysis to extract information from the WCSim output .ROOT file. The clusterization tools will filter hits within an alloted time interval (defined as a cluster) and pass these hits along as an event to the PhaseIITreeMaker tool. This tool will create a .ROOT file containing trees (cluster-level and raw hits) and histograms of various parameters of the events.
 2. Store the .ROOT output file from ToolAnalysis into the `/WCSim_Data` folder.
-3. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running either `fit_PDF_residual.py` or `filter_hits_PDF.py` will fit the hit timing residual data with a nct PDF, and write to that .dat file. There are two codes to do this (an ongoing analysis):
-      - `fit_PDF_residual.py` will fit all of the data (all hits in a given cluster across events).
-      - `filter_hits_PDF.py` will first filter the hits exactly the same as the emcee reconstruction algorithm (useful for checking the hit filtering without having to run the full reconstruction code), but will then fit a PDF to the filtered hit times, not all of the hit times. This is currently being tested to see if it will yield better reconstructed vertices than the full hit timing.
+3. Modify `PDF.dat` to include the fit parameters of the hit residual data. Running `fit_PDF_residual.py` will fit the hit timing residual data with a PDF, and write to that .dat file. 
 
 (Running the code)
 1. Modify `emcee_lowE_reco.py` for the correct path names and other configuration information. The parametrization is at the top of the script.
@@ -67,9 +57,8 @@ to be updated
 
 ##
 Files and Directories included:
-- `FullTankPMTGeometry.csv` contains the geometry, locations, type, and overall information of the PMTs and is important for loading in the detector geometry and establishing the priors (initial constraints on where the vertices could be).
 * `\emcee_files` is where the final reconstructed vertex positions and errors will be placed. It contains some example .dat files produced from the main reconstruction algorithm.
 * `\emcee_plots` is the directory where (if specified) the emcee corner plots will be produced. These show the walker distributions in each dimension, along with the associated truth (MC) vertex information.
-* `PDF.dat` is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF (approximately non-central student's t).
+* `PDF.dat` is the output of the 'fit_PDF_residual.py' script which generates the corresponding parameters for the hit-timing residual PDF.
 * `\WCSim_Data` contains the MC hit root trees from ToolAnalysis.
 * `reco_dependencies.sh` is a bash script containing commands for downloading the required python dependencies. Comment out the dependencies you already have. Have not tested this.
