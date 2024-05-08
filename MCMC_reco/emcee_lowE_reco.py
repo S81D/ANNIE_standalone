@@ -85,7 +85,7 @@ print('\nLoading data...\n')
 # Import and read PMT timing 
 df = pd.read_csv('PMT_Timing.csv')
 reliability = []; ch_num = []; res = []
-for i in range(len(df['Channel'])):       # loop over PMTs
+for i in range(len(df['Channel'])):
     ch_num.append(df['Channel'][i])
     reliability.append(df['notes'][i])
     res.append(df['offset_std(ns)'][i])
@@ -124,6 +124,8 @@ for files in range(len(file_name)):
     # truth information
     truth = file['phaseIITriggerTree']
     en = truth['eventNumber'].array()
+    # Change truth objects as needed - this particular example file uses neutrons, so I have selected the neutron capture vertex
+    # other ntuple objects include: trueVtx, etc...
     vx = truth['trueNeutCapVtxX'].array()         # [cm]
     vy = truth['trueNeutCapVtxY'].array()
     vz = truth['trueNeutCapVtxZ'].array()
@@ -194,7 +196,7 @@ for event in range(a_start,a_end+1):
 
     first_time = sum(av_temp[0:4])/4
     
-    max_travel_time = 10
+    max_travel_time = 10                             # maximum allowable time to include hits
 
     for i in range(len(clusters[event].hitT)):
 
@@ -485,20 +487,20 @@ finally:            # execute even with errors (or closing the program)
     tree_data = {
         "eventNumber": np.array(evs[0]),
         "clusterNumber": np.array(evs[1]),
-        "final_Nhits": np.array(n_hits),
-        "truth_x": np.array(vtxs[0]),
+        "final_Nhits": np.array(n_hits),       # final number of hits to be used in reconstruction, after hit cleaning and filtering
+        "truth_x": np.array(vtxs[0]),          # truth vertex [cm]
         "truth_y": np.array(vtxs[1]),
         "truth_z": np.array(vtxs[2]),
         "truth_t": np.array(vtxs[3]),
-        "reco_pos_x": np.array(r_pos[0]),
+        "reco_pos_x": np.array(r_pos[0]),      # reconstructed vertex position [cm]
         "reco_pos_y": np.array(r_pos[1]),
         "reco_pos_z": np.array(r_pos[2]),
-        "reco_pos_t": np.array(r_pos[3]),
-        "error_x": np.array(er[0]),
+        "reco_pos_t": np.array(r_pos[3]),      # reconstructed omission time [ns]
+        "error_x": np.array(er[0]),            # 1D errors [cm]
         "error_y": np.array(er[1]),
         "error_z": np.array(er[2]),
-        "error_t": np.array(er[3]),
-        "total_error": np.array(er[4]),
+        "error_t": np.array(er[3]),            # error between omission and reconstructed time [ns]
+        "total_error": np.array(er[4]),        # total 3D error/displacement between reco and truth vertex [cm]
     }    
 
     file["Vertex_Reconstruction"] = tree_data
