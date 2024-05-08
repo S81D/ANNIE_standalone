@@ -4,7 +4,8 @@
 # comment out the ones that already exist on your computer
 # (assumes that you have pip installed)
 
-pip install uproot3
+# Read and write root files
+pip install uproot
 
 # PDF fitting
 #python3 -m pip install statsmodels
