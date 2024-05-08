@@ -27,7 +27,7 @@ from scipy.stats._continuous_distns import _distn_names
 
 
 ''' Things to check before you run this code:
-    1. Is there a root file in /WCSim_data?
+    1. Is there a root file in /WCSim_Data?
     2. Did you run fit_PDF_residual.py to generate a PDF fit to the time-residual data?
 '''
 
@@ -36,7 +36,7 @@ from scipy.stats._continuous_distns import _distn_names
 ######################################################
 
 # 1. ---------------
-file_name = ['skyshine_10k.ntuple.root']
+file_name = ['WCSim_Data/example.ntuple.root']
 
 # 2. ---------------
 # Number of events/clusters we are performing the reconstruction on
