@@ -373,8 +373,7 @@ print(burn_in_steps, 'burn-in steps |', n_steps, 'production-run steps\n\n')
 
 # final reconstructed vertex information to be saved
 root_str = 'output/vtx_reco_' + str(a_start) + '_' + str(a_end) + '.ntuple.root'
-os.system('rm ' + root_str)        # in case there is some pre-existing file
-file = uproot.create(root_str)
+file = uproot.recreate(root_str)
 
 evs = [[], []]             # event number, cluster number
 vtxs = [[], [], [], []]    # x, y, z [cm], t [ns]   - truth vertices
