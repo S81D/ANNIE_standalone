@@ -27,7 +27,7 @@ from scipy.stats._continuous_distns import _distn_names
 
 
 ''' Things to check before you run this code:
-    1. Is there a root file in /WCSim_Data?
+    1. Is there a root file in WCSim_Data/?
     2. Did you run fit_PDF_residual.py to generate a PDF fit to the time-residual data?
 '''
 
